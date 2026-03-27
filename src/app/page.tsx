@@ -1,61 +1,169 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
+
+// ── Pricing data ──────────────────────────────────────────────
+
+const PRICING_MONTHLY = [
+  {
+    name: "Gratis",
+    price: "0 kr",
+    period: "for alltid",
+    description: "Kom i gang med det grunnleggende.",
+    features: [
+      "Gjesteliste (opptil 50)",
+      "Enkel budsjettoversikt",
+      "Tidslinjemal",
+    ],
+    cta: "Start gratis",
+    style: "free" as const,
+  },
+  {
+    name: "Standard",
+    price: "99 kr",
+    period: "per maned",
+    description: "For par som vil ha full kontroll.",
+    features: [
+      "Alt i Gratis",
+      "Ubegrenset gjester",
+      "RSVP & digitale invitasjoner",
+      "Full budsjettstyring",
+      "Leverandoroversikt",
+    ],
+    cta: "Velg Standard",
+    popular: true,
+    style: "standard" as const,
+  },
+  {
+    name: "Premium",
+    price: "199 kr",
+    period: "per maned",
+    description: "Alt du trenger, pluss smarte verktoy.",
+    features: [
+      "Alt i Standard",
+      "AI-leverandorsok",
+      "Prissammenligning",
+      "Personlig bryllupsside",
+      "Prioritert support",
+    ],
+    cta: "Velg Premium",
+    style: "premium" as const,
+  },
+];
+
+const PRICING_ONETIME = [
+  {
+    name: "Gratis",
+    price: "0 kr",
+    period: "for alltid",
+    description: "Kom i gang med det grunnleggende.",
+    features: [
+      "Gjesteliste (opptil 50)",
+      "Enkel budsjettoversikt",
+      "Tidslinjemal",
+    ],
+    cta: "Start gratis",
+    style: "free" as const,
+  },
+  {
+    name: "Standard",
+    price: "799 kr",
+    period: "engangskjop · 18 mnd tilgang",
+    description: "For par som vil ha full kontroll.",
+    features: [
+      "Alt i Gratis",
+      "Ubegrenset gjester",
+      "RSVP & digitale invitasjoner",
+      "Full budsjettstyring",
+      "Leverandoroversikt",
+    ],
+    cta: "Velg Standard",
+    popular: true,
+    style: "standard" as const,
+  },
+  {
+    name: "Premium",
+    price: "1 499 kr",
+    period: "engangskjop · 18 mnd tilgang",
+    description: "Alt du trenger, pluss smarte verktoy.",
+    features: [
+      "Alt i Standard",
+      "AI-leverandorsok",
+      "Prissammenligning",
+      "Personlig bryllupsside",
+      "Prioritert support",
+    ],
+    cta: "Velg Premium",
+    style: "premium" as const,
+  },
+];
+
+// ── Component ─────────────────────────────────────────────────
 
 export default function HomePage() {
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [billingMode, setBillingMode] = useState<"monthly" | "onetime">("monthly");
+
+  // Waitlist form
+  const [wlName, setWlName] = useState("");
+  const [wlEmail, setWlEmail] = useState("");
+  const [wlCity, setWlCity] = useState("");
+  const [wlSubmitted, setWlSubmitted] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const handleWaitlist = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email.trim()) {
-      setSubmitted(true);
+    if (wlEmail.trim() && wlName.trim()) {
+      setWlSubmitted(true);
     }
   };
 
+  const pricing = billingMode === "monthly" ? PRICING_MONTHLY : PRICING_ONETIME;
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* ─── NAVBAR ─── */}
-      <header className="sticky top-0 z-40 border-b border-border-light bg-background/80 backdrop-blur-md">
-        <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+    <div className="min-h-screen bg-background scroll-smooth">
+      {/* ─── NAVBAR (glassmorphism) ─── */}
+      <nav
+        className={`fixed inset-x-0 top-0 z-50 bg-white/60 backdrop-blur-xl transition-all duration-300 ${
+          scrolled ? "shadow-sm border-b border-stone-200/50" : "border-b border-transparent"
+        }`}
+      >
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#e11d48"/>
             </svg>
-            <span className="text-lg font-bold tracking-tight text-foreground">
-              Planlegg
-            </span>
+            <span className="text-lg font-bold tracking-tight text-stone-900">Planlegg</span>
           </Link>
           <div className="hidden items-center gap-8 md:flex">
-            <Link href="#features" className="text-sm text-muted-foreground transition hover:text-foreground">
-              Funksjoner
-            </Link>
-            <Link href="#pricing" className="text-sm text-muted-foreground transition hover:text-foreground">
-              Pris
-            </Link>
-            <Link href="#waitlist" className="text-sm text-muted-foreground transition hover:text-foreground">
-              Venteliste
-            </Link>
+            <a href="#features" className="text-sm text-stone-500 transition hover:text-stone-900">Funksjoner</a>
+            <a href="#pricing" className="text-sm text-stone-500 transition hover:text-stone-900">Pris</a>
+            <a href="#waitlist" className="text-sm text-stone-500 transition hover:text-stone-900">Venteliste</a>
           </div>
           <div className="flex items-center gap-3">
-            <Link
-              href="/dashboard"
-              className="text-sm font-medium text-foreground transition hover:text-primary"
-            >
+            <Link href="/dashboard" className="text-sm font-medium text-stone-700 transition hover:text-rose-600">
               Logg inn
             </Link>
             <button
               onClick={() => setShowOnboarding(true)}
-              className="rounded-lg bg-stone-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-stone-800"
+              className="rounded-full bg-stone-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-stone-800"
             >
               Kom i gang
             </button>
           </div>
-        </nav>
-      </header>
+        </div>
+      </nav>
+
+      {/* Spacer for fixed nav */}
+      <div className="h-16" />
 
       {/* ─── HERO ─── */}
       <section className="relative overflow-hidden">
@@ -76,36 +184,20 @@ export default function HomePage() {
                 Gjesteliste, budsjett, leverandorer og invitasjoner — alt samlet pa ett sted.
                 Slik at du kan fokusere pa det som faktisk betyr noe.
               </p>
-
-              {/* Waitlist form */}
-              <form onSubmit={handleWaitlist} className="mt-8">
-                {!submitted ? (
-                  <div className="flex max-w-md gap-3">
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Din e-postadresse"
-                      required
-                      className="h-12 flex-1 rounded-lg border border-stone-300 bg-white px-4 text-sm text-foreground placeholder:text-stone-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10"
-                    />
-                    <button
-                      type="submit"
-                      className="h-12 rounded-lg bg-stone-900 px-6 text-sm font-semibold text-white transition hover:bg-stone-800"
-                    >
-                      Meld deg pa
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2 text-sm text-emerald-600">
-                    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    Du er pa listen! Vi sender deg en e-post nar vi lanserer.
-                  </div>
-                )}
-                <p className="mt-3 text-xs text-stone-400">
-                  127 personer har allerede meldt seg pa · Ingen spam, vi lover
-                </p>
-              </form>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <a
+                  href="#waitlist"
+                  className="rounded-full bg-stone-900 px-7 py-3 text-sm font-semibold text-white transition hover:bg-stone-800"
+                >
+                  Sikre din plass
+                </a>
+                <a
+                  href="#features"
+                  className="rounded-full border border-stone-300 bg-white/60 px-7 py-3 text-sm font-semibold text-stone-700 backdrop-blur-sm transition hover:bg-white"
+                >
+                  Se funksjoner
+                </a>
+              </div>
             </div>
 
             {/* Right — product showcase */}
@@ -122,7 +214,6 @@ export default function HomePage() {
                     </div>
                   </div>
                   <div className="p-5">
-                    {/* Dashboard header */}
                     <div className="mb-4 flex items-center justify-between">
                       <div>
                         <p className="text-sm font-bold text-stone-900">Hei, Vegard & Line</p>
@@ -130,7 +221,6 @@ export default function HomePage() {
                       </div>
                       <div className="rounded-lg bg-rose-50 px-3 py-1 text-xs font-medium text-rose-600">14. jun 2027</div>
                     </div>
-                    {/* Stat cards */}
                     <div className="grid grid-cols-4 gap-2">
                       {[
                         { label: "Dager igjen", value: "447", bg: "bg-stone-50" },
@@ -144,7 +234,6 @@ export default function HomePage() {
                         </div>
                       ))}
                     </div>
-                    {/* Content cards */}
                     <div className="mt-3 grid grid-cols-5 gap-2">
                       <div className="col-span-3 rounded-xl border border-stone-100 p-3">
                         <p className="text-[10px] font-semibold text-stone-700">Budsjett</p>
@@ -270,85 +359,220 @@ export default function HomePage() {
       <section id="pricing" className="bg-white py-24 md:py-32">
         <div className="mx-auto max-w-6xl px-6">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-sm font-semibold text-primary">Enkel prising</p>
+            <p className="text-sm font-semibold text-primary">Enkel og rettferdig prising</p>
             <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-stone-900 md:text-4xl">
-              Ett bryllup. En pris.
+              Velg planen som passer dere
             </h2>
             <p className="mt-4 text-[16px] text-stone-500">
-              Full tilgang fra forlovelse til bryllupsdag. Ingen skjulte kostnader, ingen abonnement som tikker etter festen er over.
+              Full tilgang fra forlovelse til bryllupsdag. Ingen skjulte kostnader.
             </p>
-          </div>
 
-          <div className="mx-auto mt-12 max-w-md">
-            <div className="rounded-2xl border-2 border-stone-900 bg-white p-8 shadow-lg">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-stone-900">Planlegg</h3>
-                <span className="rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-700">Popularr</span>
-              </div>
-              <p className="mt-4 text-sm text-stone-500">Alt du trenger for a planlegge bryllupet, fra start til slutt.</p>
-              <div className="mt-6 flex items-baseline gap-1">
-                <span className="font-serif text-4xl font-bold text-stone-900">Tidlig tilgang</span>
-              </div>
-              <p className="mt-1 text-xs text-stone-400">Tidlig tilgang + lavere pris for deg som er tidlig ute</p>
-
-              <div className="mt-6 space-y-3">
-                {pricingFeatures.map((f) => (
-                  <div key={f} className="flex items-center gap-3">
-                    <svg className="h-4 w-4 shrink-0 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span className="text-sm text-stone-700">{f}</span>
-                  </div>
-                ))}
-              </div>
-
-              <a
-                href="#waitlist"
-                className="mt-8 flex h-12 w-full items-center justify-center rounded-lg bg-stone-900 text-sm font-semibold text-white transition hover:bg-stone-800"
+            {/* Billing toggle */}
+            <div className="mt-8 inline-flex items-center gap-1 rounded-full bg-stone-100 p-1">
+              <button
+                onClick={() => setBillingMode("monthly")}
+                className={`rounded-full px-5 py-2 text-sm font-medium transition ${
+                  billingMode === "monthly"
+                    ? "bg-white text-stone-900 shadow-sm"
+                    : "text-stone-500 hover:text-stone-700"
+                }`}
               >
-                Bli med pa ventelisten
-              </a>
+                Manedlig
+              </button>
+              <button
+                onClick={() => setBillingMode("onetime")}
+                className={`rounded-full px-5 py-2 text-sm font-medium transition ${
+                  billingMode === "onetime"
+                    ? "bg-white text-stone-900 shadow-sm"
+                    : "text-stone-500 hover:text-stone-700"
+                }`}
+              >
+                Engangskjop
+              </button>
             </div>
           </div>
+
+          {/* Pricing cards */}
+          <div className="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-3">
+            {pricing.map((tier) => (
+              <div
+                key={tier.name}
+                className={`relative flex flex-col rounded-2xl p-8 ${
+                  tier.style === "free"
+                    ? "border border-stone-200 bg-white"
+                    : tier.style === "standard"
+                      ? "border-2 border-rose-200 bg-white shadow-lg"
+                      : "bg-stone-900 text-white"
+                }`}
+              >
+                {tier.style === "standard" && (
+                  <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-rose-500 px-4 py-1 text-xs font-semibold text-white">
+                    Mest populaer
+                  </span>
+                )}
+                <h3
+                  className={`text-lg font-bold ${
+                    tier.style === "premium" ? "text-white" : "text-stone-900"
+                  }`}
+                >
+                  {tier.name}
+                </h3>
+                <p
+                  className={`mt-1 text-sm ${
+                    tier.style === "premium" ? "text-stone-400" : "text-stone-500"
+                  }`}
+                >
+                  {tier.description}
+                </p>
+                <div className="mt-5 flex items-baseline gap-1">
+                  <span
+                    className={`font-serif text-4xl font-bold ${
+                      tier.style === "premium" ? "text-white" : "text-stone-900"
+                    }`}
+                  >
+                    {tier.price}
+                  </span>
+                </div>
+                <p
+                  className={`mt-1 text-xs ${
+                    tier.style === "premium" ? "text-stone-500" : "text-stone-400"
+                  }`}
+                >
+                  {tier.period}
+                </p>
+
+                <div className="mt-6 flex-1 space-y-3">
+                  {tier.features.map((f) => (
+                    <div key={f} className="flex items-start gap-2.5">
+                      <svg
+                        className={`mt-0.5 h-4 w-4 shrink-0 ${
+                          tier.style === "premium" ? "text-rose-400" : "text-emerald-500"
+                        }`}
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      <span
+                        className={`text-sm ${
+                          tier.style === "premium" ? "text-stone-300" : "text-stone-600"
+                        }`}
+                      >
+                        {f}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <a
+                  href="#waitlist"
+                  className={`mt-8 flex h-12 w-full items-center justify-center rounded-lg text-sm font-semibold transition ${
+                    tier.style === "free"
+                      ? "border border-stone-300 bg-white text-stone-700 hover:bg-stone-50"
+                      : tier.style === "standard"
+                        ? "bg-stone-900 text-white hover:bg-stone-800"
+                        : "bg-white text-stone-900 hover:bg-stone-100"
+                  }`}
+                >
+                  {tier.cta}
+                </a>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-10 text-center text-sm text-stone-400">
+            Usikker? Start gratis og oppgrader nar du er klar.
+          </p>
         </div>
       </section>
 
-      {/* ─── WAITLIST CTA ─── */}
-      <section id="waitlist" className="bg-stone-900 py-24">
-        <div className="mx-auto max-w-2xl px-6 text-center">
-          <h2 className="font-serif text-3xl font-bold tracking-tight text-white md:text-4xl">
-            Fa tidlig tilgang
-          </h2>
-          <p className="mt-4 text-[16px] text-stone-400">
-            Var blant de forste som prover Planlegg. Meld deg pa ventelisten sa sender vi deg en invitasjon nar vi er klare.
-          </p>
+      {/* ─── WAITLIST ─── */}
+      <section id="waitlist" className="bg-gradient-to-b from-white to-rose-50/40 py-24 md:py-32">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            {/* Left — text */}
+            <div>
+              <p className="text-sm font-semibold text-primary">Begrenset tilgang</p>
+              <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-stone-900 md:text-4xl">
+                Fa tidlig tilgang
+              </h2>
+              <p className="mt-4 max-w-md text-[16px] leading-relaxed text-stone-500">
+                Meld deg pa ventelisten og vaer blant de forste som tester Planlegg.
+                Tidlige brukere far gratis Premium i 3 maneder.
+              </p>
+              <div className="mt-6 flex items-center gap-4">
+                <div className="flex -space-x-2">
+                  {["V", "L", "S", "M"].map((letter, i) => (
+                    <div
+                      key={letter}
+                      className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-stone-200 text-xs font-bold text-stone-600"
+                    >
+                      {letter}
+                    </div>
+                  ))}
+                </div>
+                <p className="text-sm text-stone-500">
+                  <span className="font-semibold text-stone-700">127 personer</span> har allerede sikret sin plass
+                </p>
+              </div>
+            </div>
 
-          <form onSubmit={handleWaitlist} className="mt-8">
-            {!submitted ? (
-              <div className="mx-auto flex max-w-md gap-3">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Din e-postadresse"
-                  required
-                  className="h-12 flex-1 rounded-lg border border-stone-700 bg-stone-800 px-4 text-sm text-white placeholder:text-stone-500 focus:border-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-500/20"
-                />
-                <button
-                  type="submit"
-                  className="h-12 rounded-lg bg-white px-6 text-sm font-semibold text-stone-900 transition hover:bg-stone-100"
-                >
-                  Meld meg pa
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center justify-center gap-2 text-sm text-emerald-400">
-                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                Du er pa listen! Vi sender deg en e-post nar vi lanserer.
-              </div>
-            )}
-            <p className="mt-3 text-xs text-stone-500">
-              127 personer har allerede meldt seg pa · Ingen spam, vi lover
-            </p>
-          </form>
+            {/* Right — form */}
+            <div className="rounded-2xl border border-stone-200 bg-white p-8 shadow-lg">
+              {!wlSubmitted ? (
+                <form onSubmit={handleWaitlist} className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium text-stone-700">Navn *</label>
+                    <input
+                      type="text"
+                      value={wlName}
+                      onChange={(e) => setWlName(e.target.value)}
+                      placeholder="Ditt navn"
+                      required
+                      className="mt-1.5 h-11 w-full rounded-lg border border-stone-300 bg-white px-4 text-sm text-stone-900 placeholder:text-stone-400 focus:border-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-500/10"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-stone-700">E-post *</label>
+                    <input
+                      type="email"
+                      value={wlEmail}
+                      onChange={(e) => setWlEmail(e.target.value)}
+                      placeholder="din@epost.no"
+                      required
+                      className="mt-1.5 h-11 w-full rounded-lg border border-stone-300 bg-white px-4 text-sm text-stone-900 placeholder:text-stone-400 focus:border-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-500/10"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-stone-700">Hvilken by gifter du deg i? <span className="text-stone-400">(valgfritt)</span></label>
+                    <input
+                      type="text"
+                      value={wlCity}
+                      onChange={(e) => setWlCity(e.target.value)}
+                      placeholder="f.eks. Bergen, Oslo, Trondheim"
+                      className="mt-1.5 h-11 w-full rounded-lg border border-stone-300 bg-white px-4 text-sm text-stone-900 placeholder:text-stone-400 focus:border-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-500/10"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="mt-2 flex h-12 w-full items-center justify-center rounded-lg bg-stone-900 text-sm font-semibold text-white transition hover:bg-stone-800"
+                  >
+                    Sikre min plass
+                  </button>
+                  <p className="text-center text-xs text-stone-400">Ingen spam, vi lover.</p>
+                </form>
+              ) : (
+                <div className="py-8 text-center">
+                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50">
+                    <svg className="h-8 w-8 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <h3 className="mt-4 text-lg font-bold text-stone-900">Du er pa listen!</h3>
+                  <p className="mt-2 text-sm text-stone-500">
+                    Vi kontakter deg snart med en invitasjon til Planlegg. Hold utkikk i innboksen.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -374,6 +598,8 @@ export default function HomePage() {
     </div>
   );
 }
+
+// ── Static data ───────────────────────────────────────────────
 
 const painPoints = [
   { stat: "78%", description: "av par foler seg stresset under planleggingen" },
@@ -412,15 +638,4 @@ const features = [
     description: "En oversikt over alt som ma gjores — fra forlovelse til bryllupsdag. Aldri glem en deadline.",
     icon: <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>,
   },
-];
-
-const pricingFeatures = [
-  "Gjesteliste & RSVP-handtering",
-  "Budsjettoversikt",
-  "Leverandorsporing",
-  "Tidslinjeplanlegger",
-  "Digitale invitasjoner",
-  "AI-drevet leverandorsok",
-  "Prissammenligning lokaler",
-  "Personlig bryllupsside",
 ];
