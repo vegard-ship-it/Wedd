@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useState } from "react";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
 
@@ -51,55 +50,160 @@ export default function HomePage() {
       </header>
 
       {/* ─── HERO ─── */}
-      <section className="relative overflow-hidden min-h-[600px] md:min-h-[700px] flex items-center">
-        {/* Background image */}
-        <Image
-          src="/images/hero-wedding.jpg"
-          alt="Brudepar som går hånd i hånd i solnedgangen"
-          fill
-          priority
-          className="object-cover object-center"
-        />
-        {/* Dark overlay for readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#f8f6f3] via-[#f0ece6] to-[#e8e0d8]">
+        {/* Subtle decorative elements */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent" />
+        <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-accent/10 blur-3xl" />
+        <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
 
-        <div className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:py-28 lg:py-32 w-full">
-          <div className="max-w-2xl animate-fade-in">
-            <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight text-white md:text-5xl lg:text-6xl">
-              Planlegg jeres<br />
-              <span className="text-accent">drømmebryllup</span>
-            </h1>
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-white/80">
-              Alt du trenger for å planlegge bryllupet — fra budsjett og gjesteliste
-              til leverandører og invitasjoner. Helt gratis å starte.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <button
-                onClick={() => setShowOnboarding(true)}
-                className="rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-primary-foreground shadow-md transition hover:bg-primary/90 hover:shadow-lg"
-              >
-                Start planleggingen
-              </button>
-              <Link
-                href="#how-it-works"
-                className="rounded-full border-2 border-white/30 bg-white/10 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:border-white/50 hover:bg-white/20"
-              >
-                Se hvordan det fungerer
-              </Link>
+        <div className="relative mx-auto max-w-7xl px-6 py-20 md:py-28 lg:py-32">
+          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+            {/* Left — text */}
+            <div className="animate-fade-in">
+              <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight text-foreground md:text-5xl lg:text-6xl">
+                Planlegg deres<br />
+                <span className="text-primary">drømmebryllup</span>
+              </h1>
+              <p className="mt-6 max-w-lg text-lg leading-relaxed text-foreground/70">
+                Alt du trenger for å planlegge bryllupet — fra budsjett og gjesteliste
+                til leverandører og invitasjoner. Helt gratis å starte.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <button
+                  onClick={() => setShowOnboarding(true)}
+                  className="rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-primary-foreground shadow-md transition hover:bg-primary/90 hover:shadow-lg"
+                >
+                  Kom i gang gratis
+                </button>
+                <Link
+                  href="#how-it-works"
+                  className="rounded-full border-2 border-foreground/15 bg-white/60 px-8 py-3.5 text-sm font-semibold text-foreground backdrop-blur-sm transition hover:border-foreground/25 hover:bg-white/80"
+                >
+                  Se hvordan det fungerer
+                </Link>
+              </div>
+              <div className="mt-10 flex items-center gap-6 text-sm text-foreground/50">
+                <span className="flex items-center gap-2">
+                  <CheckIcon />
+                  Gratis å starte
+                </span>
+                <span className="flex items-center gap-2">
+                  <CheckIcon />
+                  Ingen kredittkort
+                </span>
+                <span className="flex items-center gap-2">
+                  <CheckIcon />
+                  Alt på norsk
+                </span>
+              </div>
             </div>
-            <div className="mt-10 flex items-center gap-6 text-sm text-white/60">
-              <span className="flex items-center gap-2">
-                <CheckIcon />
-                Gratis å starte
-              </span>
-              <span className="flex items-center gap-2">
-                <CheckIcon />
-                Ingen kredittkort
-              </span>
-              <span className="flex items-center gap-2">
-                <CheckIcon />
-                Alt på norsk
-              </span>
+
+            {/* Right — product showcase */}
+            <div className="animate-fade-in-slow delay-200 relative hidden lg:block">
+              <div className="relative">
+                {/* Browser mockup */}
+                <div className="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-elevated">
+                  <div className="flex items-center gap-2 border-b border-border-light bg-muted/80 px-4 py-3">
+                    <div className="h-3 w-3 rounded-full bg-red-300" />
+                    <div className="h-3 w-3 rounded-full bg-yellow-300" />
+                    <div className="h-3 w-3 rounded-full bg-green-300" />
+                    <div className="ml-4 flex-1 rounded-md bg-white px-3 py-1 text-xs text-muted-foreground">
+                      bryllupsplanleggeren.no/dashboard
+                    </div>
+                  </div>
+                  <div className="p-5">
+                    {/* Dashboard header */}
+                    <div className="mb-4 flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-bold text-foreground">Hei, Vegard & Line</p>
+                        <p className="text-xs text-muted-foreground">447 dager til bryllupet</p>
+                      </div>
+                      <div className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">14. jun 2027</div>
+                    </div>
+                    {/* Stat cards */}
+                    <div className="grid grid-cols-4 gap-2.5">
+                      {[
+                        { label: "Dager igjen", value: "447", color: "bg-primary-light" },
+                        { label: "Gjester", value: "124", color: "bg-accent/15" },
+                        { label: "Bekreftet", value: "67", color: "bg-green-50" },
+                        { label: "Budsjett", value: "350k", color: "bg-muted" },
+                      ].map((stat) => (
+                        <div key={stat.label} className={`rounded-xl ${stat.color} p-3`}>
+                          <p className="text-[10px] text-muted-foreground">{stat.label}</p>
+                          <p className="mt-0.5 font-serif text-lg font-bold text-foreground">{stat.value}</p>
+                        </div>
+                      ))}
+                    </div>
+                    {/* Content cards */}
+                    <div className="mt-3 grid grid-cols-5 gap-2.5">
+                      {/* Budget progress */}
+                      <div className="col-span-3 rounded-xl border border-border-light bg-white p-3">
+                        <p className="text-[10px] font-semibold text-foreground">Budsjett</p>
+                        <div className="mt-2 space-y-1.5">
+                          {[
+                            { name: "Venue", pct: 75, color: "bg-primary" },
+                            { name: "Catering", pct: 45, color: "bg-accent" },
+                            { name: "Fotograf", pct: 100, color: "bg-green-400" },
+                            { name: "Blomster", pct: 20, color: "bg-pink-300" },
+                          ].map((item) => (
+                            <div key={item.name} className="flex items-center gap-2">
+                              <p className="w-14 text-[9px] text-muted-foreground">{item.name}</p>
+                              <div className="h-1.5 flex-1 rounded-full bg-muted">
+                                <div className={`h-1.5 rounded-full ${item.color}`} style={{ width: `${item.pct}%` }} />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      {/* Upcoming */}
+                      <div className="col-span-2 rounded-xl border border-border-light bg-white p-3">
+                        <p className="text-[10px] font-semibold text-foreground">Kommende</p>
+                        <div className="mt-2 space-y-2">
+                          {[
+                            { task: "Bestill fotograf", days: "3d", urgent: true },
+                            { task: "Smaksprøve", days: "12d", urgent: false },
+                            { task: "Send invitasjoner", days: "30d", urgent: false },
+                          ].map((t) => (
+                            <div key={t.task} className="flex items-start gap-1.5">
+                              <div className={`mt-1 h-1.5 w-1.5 rounded-full ${t.urgent ? "bg-destructive" : "bg-accent"}`} />
+                              <div>
+                                <p className="text-[9px] leading-tight text-foreground">{t.task}</p>
+                                <p className="text-[8px] text-muted-foreground">{t.days}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Floating RSVP notification */}
+                <div className="absolute -bottom-4 -left-6 rounded-xl border border-white/80 bg-white p-3.5 shadow-elevated">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-100">
+                      <svg className="h-4 w-4 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-semibold text-foreground">RSVP mottatt!</p>
+                      <p className="text-[10px] text-muted-foreground">Lisa & Erik kommer</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Floating guest count badge */}
+                <div className="absolute -top-3 -right-3 rounded-xl border border-white/80 bg-white px-3.5 py-2.5 shadow-elevated">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-light">
+                      <svg className="h-4 w-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-bold text-foreground">67 / 124</p>
+                      <p className="text-[9px] text-muted-foreground">bekreftet</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -284,7 +388,7 @@ export default function HomePage() {
 
 function CheckIcon() {
   return (
-    <svg className="h-4 w-4 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg className="h-4 w-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="20 6 9 17 4 12"/>
     </svg>
   );
