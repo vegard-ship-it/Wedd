@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { DM_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-dm-sans",
 });
 
 const playfair = Playfair_Display({
@@ -13,9 +13,9 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Bryllupsplanleggeren — Planlegg drømmebryllupet",
+  title: "Planlegg — Bryllupsplanlegging uten kaoset",
   description:
-    "Alt du trenger for å planlegge bryllupet ditt. Budsjett, gjester, leverandører, invitasjoner og mer — alt på ett sted.",
+    "Gjesteliste, budsjett, leverandører og invitasjoner — alt samlet på ett sted. Slik at du kan fokusere på det som faktisk betyr noe.",
 };
 
 export default function RootLayout({
@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="no" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="no" className={`${dmSans.variable} ${playfair.variable}`}>
       <body className="min-h-screen bg-background font-sans antialiased">
         {children}
       </body>

@@ -249,7 +249,7 @@ export default function OnboardingFlow({ open, onClose }: OnboardingFlowProps) {
                         onClick={() => setTheme(theme === t ? "" : t)}
                         className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
                           theme === t
-                            ? "border-primary bg-primary text-primary-foreground"
+                            ? "border-stone-900 bg-stone-900 text-white"
                             : "border-border bg-muted text-foreground hover:border-primary/30 hover:bg-primary-light"
                         }`}
                       >
@@ -282,9 +282,9 @@ export default function OnboardingFlow({ open, onClose }: OnboardingFlowProps) {
                 key={i}
                 className={`h-2 rounded-full transition-all duration-300 ${
                   i === step
-                    ? "w-6 bg-primary"
+                    ? "w-6 bg-stone-900"
                     : i < step
-                      ? "w-2 bg-primary/40"
+                      ? "w-2 bg-stone-400"
                       : "w-2 bg-border"
                 }`}
               />
@@ -314,7 +314,7 @@ export default function OnboardingFlow({ open, onClose }: OnboardingFlowProps) {
             {step === 0 && (
               <button
                 onClick={next}
-                className="rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90"
+                className="rounded-full bg-stone-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-stone-800"
               >
                 La oss starte
               </button>
@@ -324,7 +324,7 @@ export default function OnboardingFlow({ open, onClose }: OnboardingFlowProps) {
               <button
                 onClick={next}
                 disabled={!canNext()}
-                className="rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="rounded-full bg-stone-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-stone-800 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Neste
               </button>
@@ -333,7 +333,7 @@ export default function OnboardingFlow({ open, onClose }: OnboardingFlowProps) {
             {step === TOTAL_STEPS - 1 && (
               <button
                 onClick={finish}
-                className="rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90"
+                className="rounded-full bg-stone-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-stone-800"
               >
                 Fullfar
               </button>

@@ -1,29 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #ffffff;
-  --color-foreground: #1a1a2e;
-  --color-muted: #f7f7f9;
-  --color-muted-foreground: #6b7280;
-  --color-primary: #21897e;
+  --color-background: #fafaf9;
+  --color-foreground: #1c1917;
+  --color-muted: #f5f5f4;
+  --color-muted-foreground: #78716c;
+  --color-primary: #e11d48;
   --color-primary-foreground: #ffffff;
-  --color-primary-light: #e6f4f2;
-  --color-secondary: #c9d6df;
-  --color-secondary-foreground: #1a1a2e;
-  --color-accent: #f0c27a;
-  --color-accent-foreground: #1a1a2e;
-  --color-hero: #d0dbe6;
-  --color-hero-dark: #b8c9d9;
-  --color-destructive: #e74c3c;
+  --color-primary-light: #fff1f2;
+  --color-secondary: #e7e5e4;
+  --color-secondary-foreground: #1c1917;
+  --color-accent: #e11d48;
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #dc2626;
   --color-destructive-foreground: #ffffff;
-  --color-border: #e8eaed;
-  --color-border-light: #f0f1f3;
-  --color-ring: #21897e;
+  --color-border: #d6d3d1;
+  --color-border-light: #e7e5e4;
+  --color-ring: #e11d48;
   --color-card: #ffffff;
-  --color-card-foreground: #1a1a2e;
-  --color-sidebar: #fafbfc;
+  --color-card-foreground: #1c1917;
+  --color-sidebar: #fafaf9;
 
-  --font-sans: var(--font-inter), "Inter", system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-dm-sans), "DM Sans", system-ui, -apple-system, sans-serif;
   --font-serif: var(--font-playfair), "Playfair Display", "Georgia", serif;
 
   --radius-sm: 0.375rem;
@@ -44,7 +42,7 @@
 }
 
 ::selection {
-  background: #21897e33;
+  background: #e11d4833;
 }
 
 body {
