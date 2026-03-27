@@ -72,3 +72,21 @@ body {
 .delay-100 { animation-delay: 100ms; }
 .delay-200 { animation-delay: 200ms; }
 .delay-300 { animation-delay: 300ms; }
+
+@keyframes step-forward {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes step-back {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-step-forward {
+  animation: step-forward 0.3s ease-out both;
+}
+
+.animate-step-back {
+  animation: step-back 0.3s ease-out both;
+}

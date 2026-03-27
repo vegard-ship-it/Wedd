@@ -1,10 +1,17 @@
+"use client";
+
 import Link from "next/link";
+import Image from "next/image";
+import { useState } from "react";
+import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
 
 export default function HomePage() {
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
   return (
     <div className="min-h-screen bg-background">
       {/* ─── NAVBAR ─── */}
-      <header className="sticky top-0 z-50 border-b border-border-light bg-white/90 backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-white/80 backdrop-blur-md">
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2.5">
             <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
@@ -33,132 +40,70 @@ export default function HomePage() {
             >
               Logg inn
             </Link>
-            <Link
-              href="/dashboard"
+            <button
+              onClick={() => setShowOnboarding(true)}
               className="rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90 hover:shadow-md"
             >
               Kom i gang gratis
-            </Link>
+            </button>
           </div>
         </nav>
       </header>
 
       {/* ─── HERO ─── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-hero via-hero-dark to-secondary/40">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent" />
-        <div className="relative mx-auto max-w-7xl px-6 py-20 md:py-28 lg:py-32">
-          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-            {/* Left */}
-            <div className="animate-fade-in">
-              <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight text-foreground md:text-5xl lg:text-6xl">
-                Planlegg jeres<br />
-                <span className="text-primary">drømmebryllup</span>
-              </h1>
-              <p className="mt-6 max-w-lg text-lg leading-relaxed text-foreground/70">
-                Alt du trenger for å planlegge bryllupet — fra budsjett og gjesteliste
-                til leverandører og invitasjoner. Helt gratis å starte.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <Link
-                  href="/dashboard"
-                  className="rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-primary-foreground shadow-md transition hover:bg-primary/90 hover:shadow-lg"
-                >
-                  Start planleggingen
-                </Link>
-                <Link
-                  href="#how-it-works"
-                  className="rounded-full border-2 border-foreground/15 bg-white/60 px-8 py-3.5 text-sm font-semibold text-foreground backdrop-blur-sm transition hover:border-foreground/25 hover:bg-white/80"
-                >
-                  Se hvordan det fungerer
-                </Link>
-              </div>
-              <div className="mt-10 flex items-center gap-6 text-sm text-foreground/60">
-                <span className="flex items-center gap-2">
-                  <CheckIcon />
-                  Gratis å starte
-                </span>
-                <span className="flex items-center gap-2">
-                  <CheckIcon />
-                  Ingen kredittkort
-                </span>
-                <span className="flex items-center gap-2">
-                  <CheckIcon />
-                  Alt på norsk
-                </span>
-              </div>
+      <section className="relative overflow-hidden min-h-[600px] md:min-h-[700px] flex items-center">
+        {/* Background image */}
+        <Image
+          src="/images/hero-wedding.jpg"
+          alt="Brudepar som går hånd i hånd i solnedgangen"
+          fill
+          priority
+          className="object-cover object-center"
+        />
+        {/* Dark overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20" />
+
+        <div className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:py-28 lg:py-32 w-full">
+          <div className="max-w-2xl animate-fade-in">
+            <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight text-white md:text-5xl lg:text-6xl">
+              Planlegg jeres<br />
+              <span className="text-accent">drømmebryllup</span>
+            </h1>
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-white/80">
+              Alt du trenger for å planlegge bryllupet — fra budsjett og gjesteliste
+              til leverandører og invitasjoner. Helt gratis å starte.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <button
+                onClick={() => setShowOnboarding(true)}
+                className="rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-primary-foreground shadow-md transition hover:bg-primary/90 hover:shadow-lg"
+              >
+                Start planleggingen
+              </button>
+              <Link
+                href="#how-it-works"
+                className="rounded-full border-2 border-white/30 bg-white/10 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:border-white/50 hover:bg-white/20"
+              >
+                Se hvordan det fungerer
+              </Link>
             </div>
-
-            {/* Right — mockup */}
-            <div className="animate-fade-in-slow delay-200 relative hidden lg:block">
-              <div className="relative">
-                {/* Browser mockup */}
-                <div className="overflow-hidden rounded-2xl border border-white/50 bg-white shadow-elevated">
-                  <div className="flex items-center gap-2 border-b border-border-light bg-muted px-4 py-3">
-                    <div className="h-3 w-3 rounded-full bg-red-300" />
-                    <div className="h-3 w-3 rounded-full bg-yellow-300" />
-                    <div className="h-3 w-3 rounded-full bg-green-300" />
-                    <div className="ml-4 flex-1 rounded-md bg-white px-3 py-1 text-xs text-muted-foreground">
-                      bryllupsplanleggeren.no/dashboard
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <div className="mb-4 flex items-center justify-between">
-                      <div>
-                        <div className="h-3 w-32 rounded bg-foreground/10" />
-                        <div className="mt-2 h-2 w-48 rounded bg-foreground/5" />
-                      </div>
-                      <div className="h-8 w-20 rounded-full bg-primary/20" />
-                    </div>
-                    <div className="grid grid-cols-4 gap-3">
-                      {["459 dager", "120 gjester", "42 bekreftet", "350 000 kr"].map((text, i) => (
-                        <div key={i} className="rounded-xl bg-muted p-3">
-                          <div className="h-2 w-12 rounded bg-foreground/10" />
-                          <div className="mt-2 font-serif text-sm font-bold text-foreground/70">{text}</div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="mt-4 grid grid-cols-2 gap-3">
-                      <div className="rounded-xl bg-primary-light p-4">
-                        <div className="h-2 w-16 rounded bg-primary/30" />
-                        <div className="mt-3 h-20 rounded-lg bg-primary/10" />
-                      </div>
-                      <div className="rounded-xl bg-muted p-4">
-                        <div className="h-2 w-20 rounded bg-foreground/10" />
-                        <div className="mt-3 space-y-2">
-                          <div className="flex items-center gap-2">
-                            <div className="h-2 w-2 rounded-full bg-destructive/50" />
-                            <div className="h-2 w-24 rounded bg-foreground/8" />
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className="h-2 w-2 rounded-full bg-accent" />
-                            <div className="h-2 w-20 rounded bg-foreground/8" />
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className="h-2 w-2 rounded-full bg-border" />
-                            <div className="h-2 w-28 rounded bg-foreground/8" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Floating card */}
-                <div className="absolute -bottom-4 -left-8 rounded-xl border border-white/80 bg-white p-4 shadow-elevated">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
-                      <svg className="h-5 w-5 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-foreground">RSVP mottatt!</p>
-                      <p className="text-xs text-muted-foreground">Lisa & Erik kommer</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div className="mt-10 flex items-center gap-6 text-sm text-white/60">
+              <span className="flex items-center gap-2">
+                <CheckIcon />
+                Gratis å starte
+              </span>
+              <span className="flex items-center gap-2">
+                <CheckIcon />
+                Ingen kredittkort
+              </span>
+              <span className="flex items-center gap-2">
+                <CheckIcon />
+                Alt på norsk
+              </span>
             </div>
           </div>
         </div>
+
         {/* Wave divider */}
         <div className="absolute bottom-0 left-0 right-0">
           <svg viewBox="0 0 1440 60" fill="none" className="w-full"><path d="M0 60V30C240 10 480 0 720 10s480 20 720 0v50H0z" fill="white"/></svg>
@@ -179,7 +124,7 @@ export default function HomePage() {
           </div>
 
           <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature, i) => (
+            {features.map((feature) => (
               <div
                 key={feature.title}
                 className="group rounded-2xl border border-border bg-white p-8 transition-all duration-300 hover:border-primary/20 hover:shadow-[var(--shadow-card-hover)]"
@@ -275,12 +220,12 @@ export default function HomePage() {
           <p className="mt-4 text-lg text-white/80">
             Start gratis i dag og få full kontroll over bryllupsplanleggingen.
           </p>
-          <Link
-            href="/dashboard"
+          <button
+            onClick={() => setShowOnboarding(true)}
             className="mt-8 inline-flex rounded-full bg-white px-10 py-4 text-sm font-bold text-primary shadow-lg transition hover:bg-white/95 hover:shadow-xl"
           >
             Start planleggingen — det er gratis
-          </Link>
+          </button>
         </div>
       </section>
 
@@ -330,13 +275,16 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* ─── ONBOARDING MODAL ─── */}
+      <OnboardingFlow open={showOnboarding} onClose={() => setShowOnboarding(false)} />
     </div>
   );
 }
 
 function CheckIcon() {
   return (
-    <svg className="h-4 w-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg className="h-4 w-4 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="20 6 9 17 4 12"/>
     </svg>
   );
