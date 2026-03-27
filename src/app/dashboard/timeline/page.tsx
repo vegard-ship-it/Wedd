@@ -48,6 +48,43 @@ const periods = [
   "Siste uken",
 ];
 
+const TASK_SUGGESTIONS = [
+  { title: "Sett dato", period: "12+ måneder før" },
+  { title: "Sett budsjett", period: "12+ måneder før" },
+  { title: "Book venue", period: "12+ måneder før" },
+  { title: "Begynn gjesteliste", period: "12+ måneder før" },
+  { title: "Bestill fotograf", period: "9–12 måneder før" },
+  { title: "Bestill videograf", period: "9–12 måneder før" },
+  { title: "Bestill catering", period: "9–12 måneder før" },
+  { title: "Velg brudekjole", period: "9–12 måneder før" },
+  { title: "Bestill band / DJ", period: "9–12 måneder før" },
+  { title: "Send save-the-date", period: "9–12 måneder før" },
+  { title: "Bestill prest / vigsler", period: "9–12 måneder før" },
+  { title: "Bestill blomster", period: "6–9 måneder før" },
+  { title: "Bestill kake", period: "6–9 måneder før" },
+  { title: "Planlegg vielse", period: "6–9 måneder før" },
+  { title: "Bestill transport", period: "6–9 måneder før" },
+  { title: "Bestill overnatting for gjester", period: "6–9 måneder før" },
+  { title: "Velg ringer", period: "6–9 måneder før" },
+  { title: "Bestill dekorasjon", period: "6–9 måneder før" },
+  { title: "Send invitasjoner", period: "3–6 måneder før" },
+  { title: "Bestill dresser / antrekk", period: "3–6 måneder før" },
+  { title: "Planlegg bryllupsreise", period: "3–6 måneder før" },
+  { title: "Velg musikk til seremoni", period: "3–6 måneder før" },
+  { title: "Bestill frisør og sminke", period: "3–6 måneder før" },
+  { title: "Lag meny / matvalg", period: "3–6 måneder før" },
+  { title: "Bekreft alle leverandører", period: "1–3 måneder før" },
+  { title: "Lag bordplassering", period: "1–3 måneder før" },
+  { title: "Planlegg program", period: "1–3 måneder før" },
+  { title: "Prøvesminke og hårprøve", period: "1–3 måneder før" },
+  { title: "Skriv taler", period: "1–3 måneder før" },
+  { title: "Kjøp gaver til forlovere", period: "1–3 måneder før" },
+  { title: "Endelig bekreftelse med venue", period: "Siste uken" },
+  { title: "Generalprøve", period: "Siste uken" },
+  { title: "Forbered taler", period: "Siste uken" },
+  { title: "Pakk til bryllupsreise", period: "Siste uken" },
+];
+
 function formatDate(d: string) {
   return new Date(d).toLocaleDateString("nb-NO", { day: "numeric", month: "short", year: "numeric" });
 }
@@ -62,6 +99,7 @@ export default function TimelinePage() {
   const [showModal, setShowModal] = useState(false);
   const [editTask, setEditTask] = useState<Task | null>(null);
   const [form, setForm] = useState({ title: "", deadline: "", period: periods[0] });
+  const [showAllSuggestions, setShowAllSuggestions] = useState(false);
 
   const toggleTask = (id: string) => {
     setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
@@ -74,6 +112,7 @@ export default function TimelinePage() {
   const openAdd = () => {
     setEditTask(null);
     setForm({ title: "", deadline: "", period: periods[0] });
+    setShowAllSuggestions(false);
     setShowModal(true);
   };
 
@@ -207,46 +246,95 @@ export default function TimelinePage() {
 
       {/* Add/Edit modal */}
       <Modal open={showModal} onClose={() => setShowModal(false)} title={editTask ? "Rediger oppgave" : "Ny oppgave"}>
-        <div className="space-y-4">
-          <div>
-            <label className="text-sm font-medium text-foreground">Oppgave *</label>
-            <input
-              type="text"
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-              placeholder="f.eks. Book fotograf"
-              className="mt-1.5 h-11 w-full rounded-xl border border-border bg-muted px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/10"
-              autoFocus
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-foreground">Frist (valgfritt)</label>
-            <input
-              type="date"
-              value={form.deadline}
-              onChange={(e) => setForm({ ...form, deadline: e.target.value })}
-              className="mt-1.5 h-11 w-full rounded-xl border border-border bg-muted px-4 text-sm text-foreground focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/10"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-foreground">Periode</label>
-            <select
-              value={form.period}
-              onChange={(e) => setForm({ ...form, period: e.target.value })}
-              className="mt-1.5 h-11 w-full rounded-xl border border-border bg-muted px-4 text-sm text-foreground focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/10"
-            >
-              {periods.map((p) => <option key={p} value={p}>{p}</option>)}
-            </select>
-          </div>
-          <div className="flex justify-end gap-3 pt-2">
-            <button onClick={() => setShowModal(false)} className="rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition hover:bg-muted">
-              Avbryt
-            </button>
-            <button onClick={saveTask} className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
-              {editTask ? "Lagre" : "Legg til"}
-            </button>
-          </div>
-        </div>
+        {(() => {
+          const existingTitles = new Set(tasks.map((t) => t.title.toLowerCase()));
+          const availableSuggestions = TASK_SUGGESTIONS.filter(
+            (s) => !existingTitles.has(s.title.toLowerCase())
+          );
+          const visibleSuggestions = showAllSuggestions
+            ? availableSuggestions
+            : availableSuggestions.slice(0, 4);
+          const hasMore = availableSuggestions.length > 4;
+
+          return (
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium text-foreground">Oppgave *</label>
+                <input
+                  type="text"
+                  value={form.title}
+                  onChange={(e) => setForm({ ...form, title: e.target.value })}
+                  placeholder="f.eks. Book fotograf"
+                  className="mt-1.5 h-11 w-full rounded-xl border border-border bg-muted px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/10"
+                  autoFocus
+                />
+                {/* Suggestion pills */}
+                {!editTask && availableSuggestions.length > 0 && (
+                  <div className="mt-2.5">
+                    <div className="flex flex-wrap gap-1.5">
+                      {visibleSuggestions.map((s) => (
+                        <button
+                          key={s.title}
+                          type="button"
+                          onClick={() => setForm({ ...form, title: s.title, period: s.period })}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3 py-1 text-xs font-medium text-stone-600 transition hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700"
+                        >
+                          <svg className="h-3 w-3 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                          {s.title}
+                        </button>
+                      ))}
+                    </div>
+                    {hasMore && !showAllSuggestions && (
+                      <button
+                        type="button"
+                        onClick={() => setShowAllSuggestions(true)}
+                        className="mt-1.5 text-xs font-medium text-stone-400 transition hover:text-stone-600"
+                      >
+                        Vis flere forslag ({availableSuggestions.length - 4} til)
+                      </button>
+                    )}
+                    {showAllSuggestions && (
+                      <button
+                        type="button"
+                        onClick={() => setShowAllSuggestions(false)}
+                        className="mt-1.5 text-xs font-medium text-stone-400 transition hover:text-stone-600"
+                      >
+                        Vis faerre
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div>
+                <label className="text-sm font-medium text-foreground">Frist (valgfritt)</label>
+                <input
+                  type="date"
+                  value={form.deadline}
+                  onChange={(e) => setForm({ ...form, deadline: e.target.value })}
+                  className="mt-1.5 h-11 w-full rounded-xl border border-border bg-muted px-4 text-sm text-foreground focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/10"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-foreground">Periode</label>
+                <select
+                  value={form.period}
+                  onChange={(e) => setForm({ ...form, period: e.target.value })}
+                  className="mt-1.5 h-11 w-full rounded-xl border border-border bg-muted px-4 text-sm text-foreground focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/10"
+                >
+                  {periods.map((p) => <option key={p} value={p}>{p}</option>)}
+                </select>
+              </div>
+              <div className="flex justify-end gap-3 pt-2">
+                <button onClick={() => setShowModal(false)} className="rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition hover:bg-muted">
+                  Avbryt
+                </button>
+                <button onClick={saveTask} className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
+                  {editTask ? "Lagre" : "Legg til"}
+                </button>
+              </div>
+            </div>
+          );
+        })()}
       </Modal>
     </div>
   );
